@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Typography } from "antd";
 import { addCafe, updateCafe } from "../../actions/cafeActions";
 
 const CafeForm = () => {
+  const { Title } = Typography;
+
   const { id } = useParams();
   const dispatch = useDispatch();
-  const history = useNavigate();
+  const navigate = useNavigate();
   const cafe = useSelector((state) =>
     state.cafes.find((cafe) => cafe.id === id)
   );
@@ -28,7 +30,8 @@ const CafeForm = () => {
     const newCafe = {
       name,
       description,
-      // Add other form fields
+      logo,
+      location,
     };
 
     if (id) {
@@ -39,13 +42,22 @@ const CafeForm = () => {
       dispatch(addCafe(newCafe));
     }
 
-    history.push("/cafes");
+    navigate("/cafes");
   };
-
+  const handleFormCancel = () => {
+    navigate("/cafes");
+  };
   return (
     <div className="form-container">
-      <h2>Add/Edit Café</h2>
-      <Form name="add-edit-cafe" onFinish={onFinish} className="form">
+      <Title>Add/Edit Cafe</Title>
+      <Form
+        name="add-edit-cafe"
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 16 }}
+        style={{ maxWidth: "100%" }}
+        onFinish={onFinish}
+        className="form"
+      >
         <Form.Item
           label="Name"
           name="name"
@@ -79,7 +91,11 @@ const CafeForm = () => {
             <Button type="primary" htmlType="submit" className="form-button">
               Submit
             </Button>
-            <Button htmlType="button" className="form-button">
+            <Button
+              htmlType="button"
+              className="form-button"
+              onClick={handleFormCancel}
+            >
               Cancel
             </Button>
           </div>
